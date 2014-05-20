@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="MainController">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Hep C Registry</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @Styles.Render("~/Content/Bootstrap")
+    @Styles.Render("~/Content/BootstrapTheme")
+    @Styles.Render("~/Content/css")
+    <!--[if !IE]><!-->
+        @Styles.Render("~/Content/responsive_tables")
+    <!--<![endif]-->
+    @Scripts.Render("~/bundles/modernizr")
+    <script type="text/javascript">
+        // IE may lack its own JSON library
+        if (!window.JSON) document.write('<script src="/Scripts/json2.min.js"><\/script>');
+    </script>
+</head>
+<body>
+
+    @* Static navbar *@
+    <header class="container-fluid">
+        <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle"
+                            ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+                        <span class="sr-only">Skip to main content</span>  <!-- for accessibility -->
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="@Url.Action("Index")">VISN20 Hepatitis C Registry</a>
+                </div>
+                <div collapse="isCollapsed" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="#/">Home</a></li>
+                        <li><a href="#/about">About</a></li>
+                        <li><a href="#/help">Help</a></li>
+                        @RenderSection("menu", required: false)  @* admin page may add links to navbar *@
+                    </ul>
+                    <form class="navbar-form navbar-right">
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </form>
+                </div><!--/.nav-collapse -->
+            </div><!--/.container-fluid -->
+        </nav>
+    </header> <!-- /container -->
+
+
+    @* breadcrumb trail *@
+    <ol class="breadcrumb text-center" ng-cloak>
+        @*<li>
+            <a href="#/">Home</a>
+        </li>*@
+        <li ng-repeat="crumb in breadcrumbs" class="list-animation">
+            <a href="{{ crumb.path }}" ng-bind="crumb.view || 'Where are we?' | toTitleCase">Where are we?</a>
+        </li>
+    </ol>
+
+
+    @* AngularJS view container *@
+    <main class="container-fluid view-container">
+        <div ng-view class="view-frame"></div>
+    </main>
+
+
+    @* Static footer *@
+    <div id="footer" class="container">
+        <div class="text-right gray">
+            Version: <span ng-bind="moduleSettings.version || '?'">?</span>
+        </div>
+    </div>
+
+
+    @RenderBody()  @* required -- do not comment out; could be used for rendering AngularJS views contained in script tags *@
+
+    @Scripts.Render("~/bundles/angular")
+    @* if AngularJS fails to load from CDN, fall back on a local version *@
+    @* see: https://gist.github.com/simonbingham/5622654 *@
+    <script type="text/javascript">window.angular || document.write('<script src="/Scripts/angular.min.js"><\/script>');</script>
+
+    @Scripts.Render("~/bundles/angularModules")
+    @Scripts.Render("~/bundles/angularApp")
+
+    @RenderSection("scripts", required: false)  @* admin page may add scripts *@
+</body>
+</html>
